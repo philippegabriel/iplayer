@@ -1,5 +1,7 @@
 #!/usr/bin/perl
-#extracted from get-iplayer at: 
+#Input: basename for an .mp3 file and .tag + .jpg file
+#Apply tags to the corresponding mp3 file
+#Id3 encoding extracted from get-iplayer at: 
 #https://github.com/dinkypumpkin/get_iplayer/blob/master/get_iplayer
 use File::stat;
 use MP3::Tag;
@@ -11,9 +13,10 @@ $debug=1;
 @m4aHash{@hashTag}=@m4aTags;
 #fetch tags from tag file
 foreach(@hashTag){
-	 $tags{$_}= `sed -n -e 's/^Atom "$m4aHash{$_}" contains: //p' < $filename.tag`;
+	 $tags{$_}= `sed -n -e 's/^$m4aHash{$_}//p' < $filename.tag`;
 }
 #fetch EPISODE & SERIES
+$tags{lyrics}.= "\n";
 $tags{lyrics}.=`sed -n '/EPISODE/,+2p' < $filename.tag`;
 $tags{lyrics}.=`sed -n '/SERIES/,+2p'  < $filename.tag`;
 
